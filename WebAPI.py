@@ -10,21 +10,38 @@
 # 79281883
 
 from abc import ABC, abstractmethod
+import urllib, json
+from urllib import request,error
+
 
 class WebAPI(ABC):
+    
+    def _download_url(url_to_download: str) -> dict:
+        response = None
+        r_obj = None
 
-  def _download_url(self, url: str) -> dict:
-    #TODO: Implement web api request code in a way that supports
-    # all types of web APIs
-    pass
+        try:
+            response = urllib.request.urlopen(url_to_download)
+            json_results = response.read()
+            r_obj = json.loads(json_results)
 
-  def set_apikey(self, apikey:str) -> None:
-    pass
+        except urllib.error.HTTPError as e:
+            print('Failed to download contents of URL')
+            print('Status code: {}'.format(e.code))
 
-  @abstractmethod
-  def load_data(self):
-    pass
+        finally:
+            if response != None:
+                response.close()
+    
+        return r_obj
 
-  @abstractmethod
-  def transclude(self, message:str) -> str:
-    pass
+    def set_apikey(self, apikey:str) -> None:
+        pass
+
+    @abstractmethod
+    def load_data(self):
+        pass
+
+    @abstractmethod
+    def transclude(self, message:str) -> str:
+        pass
