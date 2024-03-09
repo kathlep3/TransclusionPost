@@ -14,9 +14,9 @@ from urllib import request,error
 
 
 class OpenWeather:
-    def __init__(self, zipcode, country_code):
+    def __init__(self, zipcode, ccode):
         self.zipcode = zipcode#this will be input
-        self.country_code = country_code#this will be input
+        self.country_code = ccode#this will be input
         self.apikey = None
         self.temperature = None
         self.high_temperature = None
@@ -26,6 +26,7 @@ class OpenWeather:
         self.description = None
         self.humidity = None
         self.sunset = None
+        self.city = None
 
         
     
@@ -61,8 +62,11 @@ class OpenWeather:
         self.description = data['weather'][0]['description']
         self.humidity = data['main']['humidity']
         self.sunset = data['sys']['sunset']
+        self.city = data['name']
+        
+        trans = self.description
 
-        return 
+        return trans
         #TODO: assign the necessary response data to the required class data attributes
         #use excpetions for"
         # Loss of local connection to the Internet
@@ -79,15 +83,16 @@ class OpenWeather:
 
 # Invalid data formatting from the remote API
     def transclude(self, message:str) -> str:
-    '''
-    Replaces keywords in a message with associated API data.
-    :param message: The message to transclude
-    :returns: The transcluded message
-    '''
-        messageTrans = message.replace("@weather", )
+        '''
+        Replaces keywords in a message with associated API data.
+        :param message: The message to transclude
+        :returns: The transcluded message
+        '''
+        trans = self.load_data()
+        messageTrans = message.replace("@weather", trans)
+        return messageTrans
         
 #TODO: write code necessary to transclude keywords in the message parameter with appropriate data from API
-
 
 
 def _download_url(url_to_download: str) -> dict:
@@ -111,22 +116,22 @@ def _download_url(url_to_download: str) -> dict:
 
 
 def main() -> None:
-    zip = "92697"
+    zipcode = "92697"
     ccode = "US"
     apikey = "6af88070b5ade9132807d7d1f4b861a5"
     url = f"http://api.openweathermap.org/data/2.5/weather?zip={zip},{ccode}&appid={apikey}"
     
-    
+    open_weather = OpenWeather(zipcode, ccode)
     open_weather.set_apikey(apikey)
     open_weather.load_data()
 
-    print(f"The temperature for {zipcode} is {open_weather.temperature} degrees")
-    print(f"The high for today in {zipcode} will be {open_weather.high_temperature} degrees")
-    print(f"The low for today in {zipcode} will be {open_weather.low_temperature} degrees")
-    print(f"The coordinates for {zipcode} are {open_weather.longitude} longitude and {open_weather.latitude} latitude")
-    print(f"The current weather for {zipcode} is {open_weather.description}")
-    print(f"The current humidity for {zipcode} is {open_weather.humidity}")
-    print(f"The sun will set in {open_weather.city} at {open_weather.sunset}")
+    # print(f"The temperature for {zipcode} is {open_weather.temperature} degrees")
+    # print(f"The high for today in {zipcode} will be {open_weather.high_temperature} degrees")
+    # print(f"The low for today in {zipcode} will be {open_weather.low_temperature} degrees")
+    # print(f"The coordinates for {zipcode} are {open_weather.longitude} longitude and {open_weather.latitude} latitude")
+    # print(f"The current weather for {zipcode} is {open_weather.description}")
+    # print(f"The current humidity for {zipcode} is {open_weather.humidity}")
+    # print(f"The sun will set in {open_weather.city} at {open_weather.sunset}")
 
 
     # weather_obj = _download_url(url)
@@ -144,7 +149,8 @@ def main() -> None:
 #  'main': {'temp': 288.37, 'feels_like': 287.98, 'temp_min': 286.94, 'temp_max': 289.8, 'pressure': 1013, 'humidity': 78}, 
 #  'visibility': 10000, 
 #  'wind': {'speed': 3.6, 'deg': 230}, 
-#  'clouds': {'all': 75}, 'dt': 1709861264, 'sys': {'type': 1, 'id': 5876, 'country': 'US', 'sunrise': 1709820699, 'sunset': 1709862784}, 
+#  'clouds': {'all': 75}, 'dt': 1709861264, 
+# 'sys': {'type': 1, 'id': 5876, 'country': 'US', 'sunrise': 1709820699, 'sunset': 1709862784}, 
 #  'timezone': -28800, 
 #  'id': 0, 
 #  'name': 'Irvine', 
