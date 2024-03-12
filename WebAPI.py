@@ -15,7 +15,7 @@ from urllib import request,error
 
 
 class WebAPI(ABC):
-    
+
     def _download_url(url_to_download: str) -> dict:
         response = None
         r_obj = None
@@ -36,7 +36,14 @@ class WebAPI(ABC):
         return r_obj
 
     def set_apikey(self, apikey:str) -> None:
+        '''
+        Sets the apikey required to make requests to a web API.
+        :param apikey: The apikey supplied by the API service
+
+        '''
+        self.apikey = apikey
         pass
+
 
     @abstractmethod
     def load_data(self):
@@ -45,3 +52,4 @@ class WebAPI(ABC):
     @abstractmethod
     def transclude(self, message:str) -> str:
         pass
+

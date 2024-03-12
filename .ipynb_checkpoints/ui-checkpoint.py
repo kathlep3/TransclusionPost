@@ -11,6 +11,7 @@ import os
 from ds_protocol import join_act, post_act, bio_act
 from ds_client import send
 from OpenWeather import OpenWeather
+from LastFM import LastFM
 
 
 def printDirectories(directory):
@@ -186,18 +187,27 @@ def commandE(cmdLine, pathString):
 
         if cleanInput[i] == "-addpost":
             try:
-                zipcode = "92697"#input("Please enter a zipcode:\n")
-                ccode = "US"#input("Please enter a country code:\n")
-                open_weather = OpenWeather(zipcode=zipcode, ccode=ccode)
-                apikey = "6af88070b5ade9132807d7d1f4b861a5"#input("Please enter API:\n")
-                open_weather.set_apikey(apikey=apikey)
-                print("API set.")
-                oldEntry = input("Now, please enter your post!\n")
-                entry = open_weather.transclude(message=oldEntry)
+                # apikey = #'92787b4240ee2a4885fa37de8647ca7b'#input("Please enter API:\n")#"6af88070b5ade9132807d7d1f4b861a5"#
+                oldEntry = input("Please enter your post!\n")
+                if '@weather' in oldEntry:
+                    apikey = input("Please enter API for OpenWeather:\n")
+                    zipcode = input("Please enter a zipcode:\n")#"92697"
+                    ccode = input("Please enter a country code:\n")#"US"
+                    open_weather = OpenWeather(zipcode=zipcode, ccode=ccode)
+                    open_weather.set_apikey(apikey=apikey)
+                    entry = open_weather.transclude(message=oldEntry)
+
+                if '@lastfm' in entry:
+                    apikey = input("Please enter API for LastFM:\n")
+                    artist = input("Please enter an artist(replace any spaces with '_'):\n")
+                    last_fm = LastFM(artist)
+                    last_fm.set_apikey(apikey=apikey)
+                    print("API set.")
+                    entry = last_fm.transclude(message=entry)
+
                 new_post = Post(entry)
                 profile.add_post(new_post)
-                print("\nThis was your post:\n" + entry)
-                print()
+
                 print("These were your post details:\n", new_post)
                 print()
                 server = input("Please enter server:\n")
